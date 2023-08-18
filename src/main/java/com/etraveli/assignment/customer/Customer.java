@@ -3,6 +3,7 @@ package main.java.com.etraveli.assignment.customer;
 import java.util.List;
 
 public class Customer {
+
     private String name;
     private List<MovieRental> rentals;
 

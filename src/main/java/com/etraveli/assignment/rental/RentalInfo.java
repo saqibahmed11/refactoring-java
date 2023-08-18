@@ -1,6 +1,9 @@
 package main.java.com.etraveli.assignment.rental;
 
+import java.util.Map;
 import java.util.HashMap;
+import main.java.com.etraveli.assignment.constants.MovieType;
+import main.java.com.etraveli.assignment.constants.PriceList;
 import main.java.com.etraveli.assignment.customer.Customer;
 import main.java.com.etraveli.assignment.customer.MovieRental;
 import main.java.com.etraveli.assignment.movie.Movie;
@@ -8,48 +11,61 @@ import main.java.com.etraveli.assignment.movie.Movie;
 public class RentalInfo {
 
   public String statement(Customer customer) {
-    HashMap<String, Movie> movies = new HashMap();
-    movies.put("F001", new Movie("You've Got Mail", "regular"));
-    movies.put("F002", new Movie("Matrix", "regular"));
-    movies.put("F003", new Movie("Cars", "childrens"));
-    movies.put("F004", new Movie("Fast & Furious X", "new"));
+    Map<String, Movie> movies = createMovieDatabase();
 
     double totalAmount = 0;
     int frequentEnterPoints = 0;
-    String result = "Rental Record for " + customer.getName() + "\n";
+    StringBuilder result = new StringBuilder("Rental Record for " + customer.getName() + "\n");
+
     for (MovieRental r : customer.getRentals()) {
-      double thisAmount = 0;
+      Movie movie = movies.get(r.getMovieId());
+      double thisAmount = calculateRentalAmount(movie.getType(), r.getDays());
 
-      // determine amount for each movie
-      if (movies.get(r.getMovieId()).getCode().equals("regular")) {
-        thisAmount = 2;
-        if (r.getDays() > 2) {
-          thisAmount = ((r.getDays() - 2) * 1.5) + thisAmount;
-        }
-      }
-      if (movies.get(r.getMovieId()).getCode().equals("new")) {
-        thisAmount = r.getDays() * 3;
-      }
-      if (movies.get(r.getMovieId()).getCode().equals("childrens")) {
-        thisAmount = 1.5;
-        if (r.getDays() > 3) {
-          thisAmount = ((r.getDays() - 3) * 1.5) + thisAmount;
-        }
-      }
-
-      //add frequent bonus points
       frequentEnterPoints++;
-      // add bonus for a two day new release rental
-      if (movies.get(r.getMovieId()).getCode() == "new" && r.getDays() > 2) frequentEnterPoints++;
+      if (movie.getType() == MovieType.NEW_RELEASE && r.getDays() > 1) {
+        frequentEnterPoints++;
+      }
 
-      //print figures for this rental
-      result += "\t" + movies.get(r.getMovieId()).getTitle() + "\t" + thisAmount + "\n";
-      totalAmount = totalAmount + thisAmount;
+      result.append("\t").append(movie.getTitle()).append("\t").append(thisAmount).append("\n");
+      totalAmount += thisAmount;
     }
-    // add footer lines
-    result += "Amount owed is " + totalAmount + "\n";
-    result += "You earned " + frequentEnterPoints + " frequent points\n";
 
-    return result;
+    result.append("Amount owed is ").append(totalAmount).append("\n");
+    result.append("You earned ").append(frequentEnterPoints).append(" frequent points\n");
+
+    return result.toString();
+  }
+
+  private Map<String, Movie> createMovieDatabase() {
+    Map<String, Movie> movies = new HashMap<>();
+    movies.put("F001", new Movie("You've Got Mail", MovieType.REGULAR));
+    movies.put("F002", new Movie("Matrix", MovieType.REGULAR));
+    movies.put("F003", new Movie("Cars", MovieType.CHILDREN));
+    movies.put("F004", new Movie("Fast & Furious X", MovieType.NEW_RELEASE));
+    return movies;
+  }
+
+  private double calculateRentalAmount(MovieType type, int days) {
+    double amount = 0;
+
+    switch (type) {
+      case REGULAR:
+        amount = PriceList.REGULAR_BASE_PRICE;
+        if (days > 2) {
+          amount += (days - 2) * PriceList.REGULAR_EXTRA_PRICE_PER_DAY;
+        }
+        break;
+      case NEW_RELEASE:
+        amount = days * PriceList.NEW_RELEASE_PRICE_PER_DAY;
+        break;
+      case CHILDREN:
+        amount = PriceList.CHILDREN_BASE_PRICE;
+        if (days > 3) {
+          amount += (days - 3) * PriceList.CHILDREN_EXTRA_PRICE_PER_DAY;
+        }
+        break;
+    }
+
+    return amount;
   }
 }
