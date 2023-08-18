@@ -1,3 +1,5 @@
+package main.java.com.etraveli.assignment.movie;
+
 public class Movie {
     private String title;
     private String code;

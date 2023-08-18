@@ -1,3 +1,5 @@
+package main.java.com.etraveli.assignment.customer;
+
 import java.util.List;
 
 public class Customer {

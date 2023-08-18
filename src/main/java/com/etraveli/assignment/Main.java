@@ -1,4 +1,9 @@
+package main.java.com.etraveli.assignment;
+
 import java.util.Arrays;
+import main.java.com.etraveli.assignment.customer.Customer;
+import main.java.com.etraveli.assignment.customer.MovieRental;
+import main.java.com.etraveli.assignment.rental.RentalInfo;
 
 public class Main {
 
@@ -11,6 +16,6 @@ public class Main {
       throw new AssertionError("Expected: " + System.lineSeparator() + String.format(expected) + System.lineSeparator() + System.lineSeparator() + "Got: " + System.lineSeparator() + result);
     }
 
-    System.out.println("Success");
+    System.out.println("Success hehe" + result);
   }
 }

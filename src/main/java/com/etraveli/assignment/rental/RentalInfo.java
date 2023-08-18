@@ -1,4 +1,9 @@
+package main.java.com.etraveli.assignment.rental;
+
 import java.util.HashMap;
+import main.java.com.etraveli.assignment.customer.Customer;
+import main.java.com.etraveli.assignment.customer.MovieRental;
+import main.java.com.etraveli.assignment.movie.Movie;
 
 public class RentalInfo {
 
