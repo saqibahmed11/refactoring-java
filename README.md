@@ -12,6 +12,13 @@ Reason how you have been thinking and the decisions you took.
 You can hand in the result any way you feel (git patch, pull-request or ZIP-file).
 Note: the Git history must be included.
 
+## What was done?
+
+Restructured project for better readability.
+Added packages for separation of concerns between classes.
+Refactored code and introduced constants & enums.
+Added Junit tests to cover some basic cases.
+
 
 ## To run the test:
 
